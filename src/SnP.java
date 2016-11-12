@@ -5,7 +5,7 @@ import java.io.IOException;
 public class SnP {
 	private SnPByDate[] closingPrice;
 	public static final int NUM_DATA_POINTS = 3023;
-	public static final String SNPFILENAME = "/Users/patrickdibble/Documents/cs585/finalProject/SNP_closing_prices.csv";
+	public static final String SNPFILENAME = "financial-report-predictor/data/data_info/SnP_closing_prices.csv";
 	
 	public SnP(){
 		closingPrice = new SnPByDate[3023];
