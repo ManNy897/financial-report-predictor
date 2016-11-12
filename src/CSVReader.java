@@ -6,15 +6,15 @@ public class CSVReader {
 //	private String csvFile;
 	private String[][] lookupTable;
 	private int NUMBER_OF_COMPANIES = 27723;
+	private String FILEPATH = "financial-report-predictor/data/data_info/symbols.csv"
 	
-	public CSVReader(String filename){
-		String csvFile = filename;
+	public CSVReader(){
 		String line = "";
 		String csvSplit = ",";
 		int i = 0;
 		lookupTable = new String[NUMBER_OF_COMPANIES][2];
 		
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFile))){
+		try (BufferedReader br = new BufferedReader(new FileReader(FILEPATH))){
 			while((line = br.readLine()) != null){
 				lookupTable[i] = line.split(csvSplit);
 				if(lookupTable[i].length == 3){
