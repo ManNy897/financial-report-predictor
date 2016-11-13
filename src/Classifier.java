@@ -24,7 +24,7 @@ public class Classifier {
 		nextYear[2] = rd.getYear() + 1; 
 
 
-		double compare = (snp.getSnPPrice(nextYear)/snp.getSnPPrice(thisYear));
+		double compare = (snp.getSnPPrice(rd.getDate())/snp.getSnPPrice(rd.getDate()));
 
 		return (rd.getYTDChange() > compare);
 	}

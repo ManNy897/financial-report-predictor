@@ -2,6 +2,7 @@
 import java.io.IOException;
 //import java.math.BigDecimal;
 import java.util.Calendar;
+import java.time.LocalDate;
 
 import yahoofinance.*;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -9,20 +10,19 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class ReportData {
 	private String filename;
 	private Stock stock;
-	private int[] date;
+	private LocalDate date;
 	private int year;
 	private int month;
 	private int day;
 	private SnP snp;
 	
-	public ReportData(String filename, String companySymbol, int[] date, SnP snp){
+	public ReportData(String filename, String companySymbol, LocalDate date){
 		this.filename = filename;
 		stock = new Stock(companySymbol);
 		this.date = date;
-		this.snp = snp;
-		int year = date[2];
-		int month = date[1]-1;
-		int day = date[0];
+		int year = date.getYear();
+		int month = date.getMonthValue()-1;
+		int day = date.getDayOfMonth();
 	}
 
 	public String getFilename() {
@@ -44,18 +44,18 @@ public class ReportData {
 	}
 	
 	public int getDay(){
-		return date[0];
+		return date.getDayOfMonth();
 	}
 	
 	public int getMonth(){
-		return date[1];
+		return date.getMonthValue();
 	}
 	
 	public int getYear(){
-		return date[2];
+		return date.getYear();
 	}
 	
-	public int[] getDate(){
+	public LocalDate getDate(){
 		return date;
 	}
 

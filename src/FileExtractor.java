@@ -67,14 +67,14 @@ public class FileExtractor {
      * @param fileName
      * @return localDate object representing the date of the report
      */
-    public int[] getReportDate(String fileName){
+    public LocalDate getReportDate(String fileName){
         String dateString = fileInfo.get(fileName).get(1);
         LocalDate  date = LocalDate.parse(dateString, DateTimeFormatter.BASIC_ISO_DATE);
         int[] dateArray = new int[3];
         dateArray[0] = date.getDayOfMonth();
         dateArray[1] = date.getMonthValue();
         dateArray[2] = date.getYear();
-        return dateArray;
+        return date;
     }
 
     /**

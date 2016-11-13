@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Map;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class FileExtractorDriver {
         //    System.out.println(fileName);
             String companyName = fe.getCompanyName(fileName);
         //    System.out.println(companyName);
-            int[] date = fe.getReportDate(fileName);
+            LocalDate date = fe.getReportDate(fileName);
             String sym = lookup.lookupSymbol(companyName);
             if(sym == null) continue;
 
