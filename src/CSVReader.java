@@ -6,7 +6,7 @@ public class CSVReader {
 //	private String csvFile;
 	private String[][] lookupTable;
 	private int NUMBER_OF_COMPANIES = 27723;
-	private String FILEPATH = "financial-report-predictor/data/data_info/symbols.csv"
+	private String FILEPATH = "/Users/patrickdibble/Documents/cs585/nlp_project/financial-report-predictor/data/snp_data/symbols.csv";
 	
 	public CSVReader(){
 		String line = "";
@@ -16,9 +16,13 @@ public class CSVReader {
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(FILEPATH))){
 			while((line = br.readLine()) != null){
+				line = line.replace(".","");
 				lookupTable[i] = line.split(csvSplit);
+//				for(String str:lookupTable[i]){
+//					str.replaceAll(".","");
+//				}
 				if(lookupTable[i].length == 3){
-					lookupTable[i][1] = lookupTable[i][1].substring(1) + "," + lookupTable[i][2].substring(0, lookupTable[i][2].length()-1);
+					lookupTable[i][1] = lookupTable[i][1].substring(1) + lookupTable[i][2].substring(0, lookupTable[i][2].length()-1);
 				}
 				i++;
 			}		

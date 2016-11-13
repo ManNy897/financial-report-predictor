@@ -6,7 +6,11 @@ public class Classifier {
 	public Classifier(){
 		snp = new SnP();
 	}
-	
+
+	public SnP getSnp() {
+		return snp;
+	}
+
 	public boolean isOutproformer(ReportData rd) throws IOException{
 		int[] thisYear = new int[3];
 		int[] nextYear = new int[3];

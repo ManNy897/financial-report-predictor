@@ -58,19 +58,23 @@ public class FileExtractor {
      * @return the map containing file names company name and report date
      */
     //used just for testing
-//    public HashMap<String, List<String>> getFileMap(){
-//        return fileInfo;
-//    }
+    public HashMap<String, List<String>> getFileMap(){
+        return fileInfo;
+    }
 
     /**
      * Returns the date of the report
      * @param fileName
      * @return localDate object representing the date of the report
      */
-    public LocalDate getReportDate(String fileName){
+    public int[] getReportDate(String fileName){
         String dateString = fileInfo.get(fileName).get(1);
         LocalDate  date = LocalDate.parse(dateString, DateTimeFormatter.BASIC_ISO_DATE);
-        return date;
+        int[] dateArray = new int[3];
+        dateArray[0] = date.getDayOfMonth();
+        dateArray[1] = date.getMonthValue();
+        dateArray[2] = date.getYear();
+        return dateArray;
     }
 
     /**
