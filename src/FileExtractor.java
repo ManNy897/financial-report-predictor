@@ -45,7 +45,7 @@ public class FileExtractor {
             ArrayList<String> elements = new ArrayList<String>();
             String fileName = parts[0] + ".txt";
             String date = parts[1];
-            String companyName = parts[3].split("/")[0].trim();
+            String companyName = parts[3].split("/")[0].trim().toLowerCase().replaceAll("[^a-zA-Z0-9\\s&]", "").replace("corporation", "corp");
             elements.add(companyName);
             elements.add(date);
             fileInfo.put(fileName, elements);
