@@ -15,6 +15,8 @@ import java.util.Queue;
 public class FileExtractorDriver {
     static String dir = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/data_info";
     static String reportDir = "/Users/macpro/Documents/CS585/Capstone/untagged_data/2005.full";
+    static String underData = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/under";
+    static String overData = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/over";
 
     public static void main(String[] args) {
         FileExtractor fe = new FileExtractor(dir);
@@ -34,6 +36,20 @@ public class FileExtractorDriver {
             LocalDate date = fe.getReportDate(fileName);
             String sym = lookup.lookupSymbol(companyName);
             if(sym == null) continue;
+            ReportData rd = new ReportData(fileName, sym, date);
+            try {
+                boolean outperformed = classify.isOutperformer(rd);
+                if (outperformed){
+                    System.out.println(fileName + ": underperformed");
+                }
+                else{
+                    System.out.println(fileName + ": overperformed");
+                }
+            } catch (IOException e) {
+                cntFound++;
+                System.out.println("Failed to classify:" + cntFound + "   " + fileName + "  " + companyName + "  " + sym);
+                e.printStackTrace();
+            }
 
 //            if(sym == null) {
 //                System.out.println("Symbol not found: " + companyName);
@@ -48,6 +64,7 @@ public class FileExtractorDriver {
 
 
         }
+        System.out.println("Failed requests: " + cntFound);
 
 //        System.out.println("Symbols Found: " + cntFound);
 //        System.out.println("Symbols Not Found: " + cntNotFound);

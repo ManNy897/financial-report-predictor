@@ -29,7 +29,7 @@ public class ReportData {
 		return filename;
 	}
 
-	public synchronized double getYTDChange() throws IOException{
+	public double getYTDChange() throws IOException{
 		Calendar from = Calendar.getInstance();
 		from.set(year, month, day);
 		Calendar to = Calendar.getInstance();
@@ -38,6 +38,8 @@ public class ReportData {
 		int size = data.size();
 		double initial = data.get(size-1).getClose().doubleValue();
 		double fin = data.get(0).getClose().doubleValue();
+		System.out.println("Initial Price: " + initial);
+		System.out.println("Final Price: " + fin);
 		return (fin/initial);
 		
 		

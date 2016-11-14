@@ -14,7 +14,8 @@ public class CSVReader {
 //		String csvSplit = ",";
 //		int i = 0;
 //		lookupTable = new String[NUMBER_OF_COMPANIES][2];
-		try(BufferedReader br = new BufferedReader(new FileReader(FILEPATH))){
+		try{
+			BufferedReader br = new BufferedReader(new FileReader(FILEPATH));
 			for(String line; (line = br.readLine()) != null;){
 				System.out.println(line);
 				String[] parts = line.split(",", 2);

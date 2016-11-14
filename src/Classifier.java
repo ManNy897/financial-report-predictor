@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class Classifier {
 	private SnP snp;
@@ -11,7 +12,7 @@ public class Classifier {
 		return snp;
 	}
 
-	public boolean isOutproformer(ReportData rd) throws IOException{
+	public boolean isOutperformer(ReportData rd) throws IOException{
 		int[] thisYear = new int[3];
 		int[] nextYear = new int[3];
 		
@@ -23,8 +24,10 @@ public class Classifier {
 		nextYear[1] = rd.getMonth();
 		nextYear[2] = rd.getYear() + 1; 
 
+		LocalDate currYear = rd.getDate();
+		LocalDate followingYear = currYear.withYear(currYear.getYear() + 1);
 
-		double compare = (snp.getSnPPrice(rd.getDate())/snp.getSnPPrice(rd.getDate()));
+		double compare = (snp.getSnPPrice(followingYear)/snp.getSnPPrice(rd.getDate()));
 
 		return (rd.getYTDChange() > compare);
 	}
