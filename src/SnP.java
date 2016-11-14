@@ -74,6 +74,13 @@ public class SnP {
 	}
 	//assumes date is after January 2, 1996
 	public double getSnPPrice(LocalDate date){
+//		if (SnPTable.containsKey(date)){
+//			return SnPTable.get(date).doubleValue();
+//		}
+		LocalDate currDate = date;
+		while(!SnPTable.containsKey(currDate)){
+			currDate = currDate.minusDays(1);
+		}
 		return SnPTable.get(date).doubleValue();
 //		int i = 0;
 //		while(i < NUM_DATA_POINTS){
