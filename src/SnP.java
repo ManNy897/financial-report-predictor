@@ -81,7 +81,7 @@ public class SnP {
 		while(!SnPTable.containsKey(currDate)){
 			currDate = currDate.minusDays(1);
 		}
-		return SnPTable.get(date).doubleValue();
+		return SnPTable.get(currDate).doubleValue();
 //		int i = 0;
 //		while(i < NUM_DATA_POINTS){
 //			if(closingPrice[i].getYear() == date[2] && closingPrice[i].getMonth() == date[1]){

@@ -25,9 +25,10 @@ public class Classifier {
 		nextYear[2] = rd.getYear() + 1; 
 
 		LocalDate currYear = rd.getDate();
-		LocalDate followingYear = currYear.withYear(currYear.getYear() + 1);
+		LocalDate followingYear = currYear.plusYears(1);
 
 		double compare = (snp.getSnPPrice(followingYear)/snp.getSnPPrice(rd.getDate()));
+		System.out.println(compare);
 
 		return (rd.getYTDChange() > compare);
 	}

@@ -11,18 +11,11 @@ public class ReportData {
 	private String filename;
 	private Stock stock;
 	private LocalDate date;
-	private int year;
-	private int month;
-	private int day;
-	private SnP snp;
 	
 	public ReportData(String filename, String companySymbol, LocalDate date){
 		this.filename = filename;
 		stock = new Stock(companySymbol);
 		this.date = date;
-		int year = date.getYear();
-		int month = date.getMonthValue()-1;
-		int day = date.getDayOfMonth();
 	}
 
 	public String getFilename() {
@@ -31,9 +24,10 @@ public class ReportData {
 
 	public double getYTDChange() throws IOException{
 		Calendar from = Calendar.getInstance();
-		from.set(year, month, day);
+		from.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
 		Calendar to = Calendar.getInstance();
-		to.set(year+1, month, day);
+		to.set(date.getYear()+1, date.getMonthValue(), date.getDayOfMonth());
+		System.out.println(stock.getSymbol() + " " + from.getTime().toString() + "  " + to.getTime().toString() );
 		java.util.List<HistoricalQuote> data = stock.getHistory(from, to);
 		int size = data.size();
 		double initial = data.get(size-1).getClose().doubleValue();

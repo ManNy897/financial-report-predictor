@@ -10,11 +10,14 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Map;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.util.Queue;
 
 public class FileExtractorDriver {
     static String dir = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/data_info";
-    static String reportDir = "/Users/macpro/Documents/CS585/Capstone/untagged_data/2005.full";
+    static String reportDir = "/Users/macpro/Documents/CS585/Capstone/untagged_data/1998.full";
     static String underData = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/under";
     static String overData = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/over";
 
@@ -26,29 +29,42 @@ public class FileExtractorDriver {
 
         File folder = new File(reportDir);
         File[] files = folder.listFiles((directory, name) -> !name.equals(".DS_Store"));
-        int cntFound = 0;
-        int cntNotFound = 0;
+        int cntOver = 0;
+        int cntUnder = 0;
+        int cntTotal = 0;
+        int cntFoundSym = 0;
         for (File file:files){
+            cntTotal += 1;
             String fileName = file.getName();
         //    System.out.println(fileName);
             String companyName = fe.getCompanyName(fileName);
         //    System.out.println(companyName);
             LocalDate date = fe.getReportDate(fileName);
             String sym = lookup.lookupSymbol(companyName);
-            if(sym == null) continue;
+            if(sym == null){
+                cntFoundSym ++;
+                continue;
+            }
             ReportData rd = new ReportData(fileName, sym, date);
             try {
+                Path source = Paths.get(reportDir);
                 boolean outperformed = classify.isOutperformer(rd);
                 if (outperformed){
                     System.out.println(fileName + ": underperformed");
+                    cntOver += 1;
+
+//                    Path underDir = Paths.get(underData);
+//                    Files.copy(source, underDir.resolve(source.getFileName()));
                 }
                 else{
                     System.out.println(fileName + ": overperformed");
+                    cntUnder += 1;
+//                    Path overDir = Paths.get(underData);
+//                    Files.copy(source, overDir.resolve(source.getFileName()));
                 }
             } catch (IOException e) {
-                cntFound++;
-                System.out.println("Failed to classify:" + cntFound + "   " + fileName + "  " + companyName + "  " + sym);
-                e.printStackTrace();
+                System.out.println("Failed to classify:" + fileName);
+                //e.printStackTrace();
             }
 
 //            if(sym == null) {
@@ -64,7 +80,10 @@ public class FileExtractorDriver {
 
 
         }
-        System.out.println("Failed requests: " + cntFound);
+        System.out.println("Total Number of Symbols Found: " + cntFoundSym);
+        System.out.println("Overperformers: " + cntOver);
+        System.out.println("Underperformers: " + cntUnder);
+        System.out.println("Total Number of Documents: " + cntTotal);
 
 //        System.out.println("Symbols Found: " + cntFound);
 //        System.out.println("Symbols Not Found: " + cntNotFound);
