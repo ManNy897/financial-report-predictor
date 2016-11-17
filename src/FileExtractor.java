@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Created by macpro on 11/10/16.
+ * Class meant to access the date and company name of each report in the data set
  */
 public class FileExtractor {
     //mapping file names to list containing date and company name of report
@@ -43,7 +43,7 @@ public class FileExtractor {
         for(String line; (line = br.readLine()) != null;){
             String[] parts = line.split("\t");
             ArrayList<String> elements = new ArrayList<String>();
-            String fileName = parts[0] + ".txt";
+            String fileName = parts[0] + ".mda";
             String date = parts[1];
             String companyName = parts[3].split("/")[0].trim().toLowerCase().replaceAll("[^a-zA-Z0-9\\s&]", "").replace("corporation", "corp");
             elements.add(companyName);

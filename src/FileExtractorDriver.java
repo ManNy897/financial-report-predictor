@@ -1,159 +1,75 @@
-/**
- * Created by macpro on 11/11/16.
- */
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.io.File;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.Map;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
-import java.util.Queue;
 
 public class FileExtractorDriver {
-    static String dir = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/data_info";
-    static String reportDir = "/Users/macpro/Documents/CS585/Capstone/untagged_data/1998.full";
-    static String underData = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/under";
-    static String overData = "/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/over";
+    //directories of all the files to be used... simply change the years that you are running on
+    //you also have to separately make the year directories in the underdata and overdata
+    static String ROOT = System.getProperty("user.dir");
+    static String METADATADIR = ROOT + "/data/data_info";
+    static String REPORTDIR = ROOT + "/data/unsorted_data/2006.mda/";
+    static String SNPDIR = ROOT + "/data/snp_data/SnP_closing_prices.csv";
+    static String SYMBOLDIR = ROOT + "/data/snp_data/symbols.csv";
+    static String UNDERDATA = ROOT + "/data/sorted_data/under/2006/";
+    static String OVERDATA = ROOT + "/data/sorted_data/over/2006/";
 
     public static void main(String[] args) {
-        FileExtractor fe = new FileExtractor(dir);
-        CSVReader lookup = new CSVReader();
-        Classifier classify = new Classifier();
-        ArrayList<ReportData> reData = new ArrayList<ReportData>();
+        FileExtractor fe = new FileExtractor(METADATADIR);
+        SymbolTable symbolTable = new SymbolTable(SYMBOLDIR);
+        Classifier classify = new Classifier(SNPDIR);
 
-        File folder = new File(reportDir);
+        File folder = new File(REPORTDIR);
         File[] files = folder.listFiles((directory, name) -> !name.equals(".DS_Store"));
+
         int cntOver = 0;
         int cntUnder = 0;
         int cntTotal = 0;
-        int cntFoundSym = 0;
+        int cntNotFoundSym = 0;
+
         for (File file:files){
             cntTotal += 1;
             String fileName = file.getName();
-        //    System.out.println(fileName);
             String companyName = fe.getCompanyName(fileName);
-        //    System.out.println(companyName);
             LocalDate date = fe.getReportDate(fileName);
-            String sym = lookup.lookupSymbol(companyName);
+            String sym = symbolTable.lookupSymbol(companyName);
+
             if(sym == null){
-                cntFoundSym ++;
+                cntNotFoundSym ++;
                 continue;
             }
-            ReportData rd = new ReportData(fileName, sym, date);
+
+            ReportData rd = new ReportData(sym, date);
+
             try {
-                Path source = Paths.get(reportDir);
+                Path source = Paths.get(REPORTDIR + fileName);
                 boolean outperformed = classify.isOutperformer(rd);
+
                 if (outperformed){
-                    System.out.println(fileName + ": underperformed");
+                    System.out.println(fileName + ": overperformed");
                     cntOver += 1;
 
-//                    Path underDir = Paths.get(underData);
-//                    Files.copy(source, underDir.resolve(source.getFileName()));
+                    Path overDir = Paths.get(OVERDATA);
+                    Files.copy(source, overDir.resolve(source.getFileName()));
                 }
                 else{
-                    System.out.println(fileName + ": overperformed");
+                    System.out.println(fileName + ": underperformed");
                     cntUnder += 1;
-//                    Path overDir = Paths.get(underData);
-//                    Files.copy(source, overDir.resolve(source.getFileName()));
+                    Path underDir = Paths.get(UNDERDATA);
+                    Files.copy(source, underDir.resolve(source.getFileName()));
                 }
             } catch (IOException e) {
-                System.out.println("Failed to classify:" + fileName);
-                //e.printStackTrace();
+                e.printStackTrace();
             }
-
-//            if(sym == null) {
-//                System.out.println("Symbol not found: " + companyName);
-//                cntNotFound++;
-//            }
-//            else{
-//                System.out.println("Symbol found: " + sym);
-//                cntFound++;
-//            }
-
-
-
-
         }
-        System.out.println("Total Number of Symbols Found: " + cntFoundSym);
+
+
+        System.out.println("Total Number of Symbols Found: " + (cntTotal - cntNotFoundSym));
         System.out.println("Overperformers: " + cntOver);
         System.out.println("Underperformers: " + cntUnder);
         System.out.println("Total Number of Documents: " + cntTotal);
 
-//        System.out.println("Symbols Found: " + cntFound);
-//        System.out.println("Symbols Not Found: " + cntNotFound);
-
-
-
-
-
-
-
- /*       int noSym = 0;
-        int countSym = 0;
-        try {
-            PrintWriter noSymOut = new PrintWriter(new FileWriter("/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/noSymbol/noSym.txt"));
-            PrintWriter symOut = new PrintWriter(new FileWriter("/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/symbol/symFiles.txt"));
-
-            for (String name : fe.getFileMap().keySet()) {
-                ArrayList<String> = fe.get
-                String symbol = lookup.get()
-
-                String fName = entry.getKey().toString();
-                System.out.print(fe.getCompanyName(fName));
-                String cName = fe.getCompanyName(fName);
-                int[] date = fe.getReportDate(fName);
-                String sym = lookup.lookupSymbol(cName);
-                System.out.println("\t" + sym);
-
-                if (sym.equals("SYMBOL NOT FOUND")) {
-                    noSymOut.println(fName);
-                    noSym++;
-                } else {
-                    ReportData rd = new ReportData(fName, sym, date, classify.getSnp());
-                    reData.add(countSym,rd);
-                    symOut.println(fName + "," + cName + "," + date.toString());
-                    countSym++;
-                }
-
-                //System.out.println(entry.getKey() + "\t" + entry.getValue() );
-            }
-            noSymOut.close();
-            symOut.close();
-        }catch(IOException e1) {
-            System.out.println("Error during writing");
-        }
-
-
-        try{
-            PrintWriter over = new PrintWriter(new FileWriter("/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/symbol/outperform/over.txt"));
-            PrintWriter under = new PrintWriter(new FileWriter("/Users/macpro/Documents/CS585/Capstone/Financial_Report_Predictor/data/sorted_data/symbol/underperform/under.txt"));
-
-            for(ReportData rd:reData){
-                if(classify.isOutproformer(rd)){
-                    over.println(rd.getFilename());
-                }
-                else{
-                    under.println(rd.getFilename());
-                }
-            }
-            over.close();
-            under.close();
-        }catch(IOException e1) {
-            System.out.println("Error during writing to over under");
-        }
-
-
-
-        System.out.println("No SYMBOL: " + noSym);
-        System.out.println("SYMBOL FOUND: " + countSym);
-        System.out.println("27887E100-10-K-2005-03-31.txt" + "   " + fe.getCompanyName("27887E100-10-K-2005-03-31.txt") + "     " + fe.getReportDate("27887E100-10-K-2005-03-31.txt")[2]);
-        System.out.println(lookup.lookupSymbol("NIKE INC"));
-        */
     }
 }
